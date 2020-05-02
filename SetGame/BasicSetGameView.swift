@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  BasicSetGameView.swift
 //  SetGame
 //
 //  Created by Christian Gabor on 4/29/20.
@@ -18,14 +18,77 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct StandardSetGameView: View {
+    @ObservedObject var viewModel: StandardSetGame
+    
     var body: some View {
-        Text("Hello, World!")
+        VStack {
+            NewGameButton(viewModel: viewModel)
+            Grid(viewModel.cards) { card in
+                CardView(card: card).onTapGesture {
+                    self.viewModel.choose(card: card)
+                }
+                    .padding(5)
+            }
+            .padding()
+            MoreCardsButton(viewModel: viewModel)
+            .padding(5)
+            
+        }
+    }
+    
+    struct NewGameButton: View {
+        var viewModel: StandardSetGame
+        
+        var body: some View {
+            Button(action: {
+                print("New Game")
+                self.viewModel.startNewGame()
+                }, label: {
+                Text("New Game")
+                    .foregroundColor(Color.primary)
+                    .padding(5)
+                    .background(Color.clear)
+                    .font(.title)
+                    .border(Color.primary, width: 2).opacity(0.6)
+                }
+            )
+        }
+    }
+    
+    struct MoreCardsButton: View {
+        var viewModel: StandardSetGame
+        
+        var body: some View {
+            Button(action: {
+                self.viewModel.addNewCards()
+                }, label: {
+                Text("More Cards")
+                    .foregroundColor(Color.primary)
+                    .padding(5)
+                    .background(Color.clear)
+                    .font(.body)
+                    .border(Color.primary, width: 2).opacity(0.6)
+                }
+            )
+        }
     }
 }
 
+struct CardView: View {
+    var card: StandardSetGame.SymbolCard
+    
+    var body: some View {
+        card.symbols.padding().cardify(isSelected: card.isSelected)
+    }
+}
+
+
+
+
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        StandardSetGameView(viewModel: StandardSetGame())
     }
 }

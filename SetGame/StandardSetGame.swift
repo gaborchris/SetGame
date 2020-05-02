@@ -10,22 +10,54 @@ import SwiftUI
 
 class StandardSetGame: ObservableObject {
     @Published private var setGame = StandardSetGame.createSetGame()
-    
+
+
     private static func createSetGame() -> SetModel {
         return SetModel()
     }
     
-    struct DefaultSets {
-        var shapes: [String] = ["Rectangle", "Oval", "Diamond"]
-        var shadings: [String] = ["stripe", "solid", "clear"]
-        var colors: [String] = ["green", "red", "purple"]
-    }
+
     
     // MARK: - Access the model
     
-    var cards: Array<SetModel.Card> {
-        return setGame.cardsInPlay
+    var cards: Array<SymbolCard> {
+        return setGame.cardsInPlay.map {card in
+
+            let shape = StandardSymbols.Shapes(rawValue: card.shape)
+            let color = StandardSymbols.Colors(rawValue: card.color)
+            let shading = StandardSymbols.Shadings(rawValue: card.shading)
+            let symbols = StandardSymbol(shape: shape!,
+                                          color: color!,
+                                          shading: shading!,
+                                          count: card.count)
+            
+            return SymbolCard(symbols: symbols, id: card.id, isSelected: card.isSelected)
+            
+        }
     }
+    
+    struct SymbolCard: Identifiable {
+        var symbols: StandardSymbol
+        var id: Int
+        var isSelected: Bool
+    }
+    
+    // MARK: - Intents
+    
+    func startNewGame() {
+        setGame = StandardSetGame.createSetGame()
+    }
+    
+    func addNewCards() {
+        setGame.addMoreCards()
+    }
+    
+    func choose(card: SymbolCard) {
+        setGame.chooseCard(cardId: card.id)
+    }
+    
+    
+    
 }
 
 
