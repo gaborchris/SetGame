@@ -25,10 +25,14 @@ struct StandardSetGameView: View {
         VStack {
             NewGameButton(viewModel: viewModel)
             Grid(viewModel.cards) { card in
+                withAnimation(.linear) {
                 CardView(card: card).onTapGesture {
-                    self.viewModel.choose(card: card)
+                    withAnimation(.linear(duration: 0.2)) {
+                        self.viewModel.choose(card: card)
+                    }
                 }
                     .padding(5)
+                }
             }
             .padding()
             MoreCardsButton(viewModel: viewModel)
@@ -76,10 +80,10 @@ struct StandardSetGameView: View {
 }
 
 struct CardView: View {
-    var card: StandardSetGame.SymbolCard
+    var card: SetModel.Card
     
     var body: some View {
-        card.symbols.padding().cardify(isSelected: card.isSelected)
+        card.symbols.padding().cardify(isSelected: card.isSelected, isMatched: card.isMatched, isMisMatched: card.isMisMatched)
     }
 }
 

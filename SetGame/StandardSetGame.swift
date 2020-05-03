@@ -20,26 +20,8 @@ class StandardSetGame: ObservableObject {
     
     // MARK: - Access the model
     
-    var cards: Array<SymbolCard> {
-        return setGame.cardsInPlay.map {card in
-
-            let shape = StandardSymbols.Shapes(rawValue: card.shape)
-            let color = StandardSymbols.Colors(rawValue: card.color)
-            let shading = StandardSymbols.Shadings(rawValue: card.shading)
-            let symbols = StandardSymbol(shape: shape!,
-                                          color: color!,
-                                          shading: shading!,
-                                          count: card.count)
-            
-            return SymbolCard(symbols: symbols, id: card.id, isSelected: card.isSelected)
-            
-        }
-    }
-    
-    struct SymbolCard: Identifiable {
-        var symbols: StandardSymbol
-        var id: Int
-        var isSelected: Bool
+    var cards: Array<SetModel.Card> {
+        return setGame.cardsInPlay
     }
     
     // MARK: - Intents
@@ -52,8 +34,8 @@ class StandardSetGame: ObservableObject {
         setGame.addMoreCards()
     }
     
-    func choose(card: SymbolCard) {
-        setGame.chooseCard(cardId: card.id)
+    func choose(card: SetModel.Card) {
+        setGame.chooseCard(card: card)
     }
     
     

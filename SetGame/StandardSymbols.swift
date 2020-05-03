@@ -93,6 +93,15 @@ struct StandardSymbol: View {
     }
 }
 
+extension SetModel.Card {
+    var symbols: StandardSymbol {
+        let shape = StandardSymbols.Shapes(rawValue: self.shape)
+        let color = StandardSymbols.Colors(rawValue: self.color)
+        let shading = StandardSymbols.Shadings(rawValue: self.shading)
+        return StandardSymbol(shape: shape!, color: color!, shading: shading!, count: self.count)
+    }
+}
+
 
 
 
